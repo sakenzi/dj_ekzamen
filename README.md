@@ -118,4 +118,74 @@ def user_logout(request):
     logout(request)
     return redirect('login')
 
+11. Django-да конфигурация файлдары (settings.py) параметрлерін 
+сипаттаңыз. 
+DEBUG=True - True болса қате туралы барлық ақпаратты береді
+SECRET_KEY='dfdfdfdfd' - Проект қауіпсіздігі үшін
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost'] - рұқсат берілген хосттар
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    .....,
+] - проектке қосылған қосымашалар
+DATABASES = [
+    'default': {
+        'ENGINE': 'django.db.backends.sqllite3',
+        'NAME': BASE_DIR / 'db.sqllite3',
+    }
+] - базаға қосылу
+STATIC_URL = '/static/' - статикалық файлдар
+MEDIA_URL = '/media/' - суреттер
+LANGUAGE_CODE = 'kk' - тіл
+TIME_ZONE = 'Asia/Almaty' - уақыт
 
+13. Django-да формаларды валидациялау (validation) қалай жүзеге 
+асырылады? 
+forms.py
+from django import forms
+
+class RegisterForm(forms.Form):
+    username = forms.CharField(max_length=30)
+    email = forms.EmailField()
+    password = forms.CharField(widget=forms.PasswordInput, min_length=8)
+
+views.py
+from django.shortcuts import render
+from .forms import RegisterForm
+
+def register(request):
+    if request.method == 'POST':
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            email = form.cleaned_data['email']
+            password = form.cleaned_data['password']
+            return render(request, 'succes.html')
+        else:
+            return render(request, 'register.html', {'form': form})
+    else:
+        form = RegisterForm()
+    return render(request, 'register.html', {'form': form})
+
+is_valid және cleaned_data
+
+14. Django-да модельдер арасындағы байланыстардың (relationship) 
+орнатылуы. 
+OneToOneField:
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+OneToManyField:
+class Author(models.Model):
+    name = models.CharField(max_length=100)
+
+class Book(models.Model):
+    author = models.ForeignKey(Author, on_delete=models.CASCADE)
+
+ManyToManyField:
+class Student(models.Model):
+    name = models.CharField(max_length=120)
+
+class Course(models.Model):
+    student = models.ManyToManyField(Student)
