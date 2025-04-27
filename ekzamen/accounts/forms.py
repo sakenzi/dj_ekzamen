@@ -9,4 +9,4 @@ class UserCreateForm(UserCreationForm):
         fields = ['email', 'username']
 
 class UserAuthenticationForm(AuthenticationForm):
-    username = forms.EmailField(label='Email')
+    username = forms.CharField(label='Username')

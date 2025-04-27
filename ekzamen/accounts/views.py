@@ -3,6 +3,9 @@ from .forms import UserCreateForm, UserAuthenticationForm
 from django.contrib.auth import login, logout, authenticate
 
 # Create your views here.
+def home_view(request):
+    return render(request, 'home.html')
+
 def user_register_view(request):
     if request.method == 'POST':
         form = UserCreateForm(request.POST)
@@ -19,9 +22,9 @@ def user_login_view(request):
     if request.method == 'POST':
         form = UserAuthenticationForm(request, data=request.POST)
         if form.is_valid():
-            email = form.cleaned_data.get('username')
+            username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
-            user = authenticate(request, email=email, password=password)
+            user = authenticate(request, username=username, password=password)
             if user is not None:
                 login(request, user)
                 return redirect('home') 

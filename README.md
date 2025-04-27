@@ -189,3 +189,139 @@ class Student(models.Model):
 
 class Course(models.Model):
     student = models.ManyToManyField(Student)
+
+15. Django-да URL конфигурациясында include() функциясының рөлі 
+қандай, мысал келтіріп түсіндіріңіз. 
+include() - django конфигурациясында басқа app url-ын проектің басты url-на қосу
+urls.py
+from django.contrib import admin
+from django.urls import include, path
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('blog/', include('blog.urls')),
+    ....
+]
+
+18. Django ORM-да деректерді сұрауды (query) жүзеге асыру жолдары, 
+мысал келтіріп түсіндіріңіз. 
+all() - барлық жазбаны алады
+filter() - белгілі бір шартпен деректі алады
+exclude() - белгілі бір шартпен деректерді алып тастайды
+get() - нақты бір обьектіні қайтарады
+order_by() - деректерді сұрыптайды
+values() - деректерді сөздік ретінде қайтарады
+count() - неше жазба бар екенін айтады
+
+20. Django жобасының базалық конфигурация файлында (settings.py) 
+«STATIC_URL» және «STATIC_URL» айырмашылықтары, конфигурациялау. 
+«TIME_ZONE» параметрінің қажеттілігі, конфигурациялау. «SECRET_KEY» 
+параметрі, қауіпсіз сақтау жолдары. 
+STATIC_URL = '/static/' - статикалық файлдарға сілтеме
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static')
+] - static папкадан файлдар алынады
+
+21. Django-да шаблон тегтері (template tags) мен фильтрлер (filters).
+тегтер:
+{% for %} - цикл жасау {% for product in products %} {{ product.name }} {% endfor %}
+{% if %} - шарт тексеру {% if user.is_authenticated %} Қош келдіңіз {% endif %}
+{% url %} - url генерациялау {% url 'home' %}
+{% block %} - блок анықтау (extend үшін) {% block content %}{% endblock %}
+{% extends %} - басқа шаблонды кеңейту {% extends 'base.html' %}
+{% include %} - басқа файл қосу {% include 'navbar.html' %}
+
+фильтрлер:
+lower - барлық әріптерді кішірейту 
+upper - барлық әріптерді үлкейту
+length - ұзындығын есептеу
+date - датаны форматтау
+truncatechars - мәтінді қысқарту
+default - бос болса басқа мән беру
+
+22. Django-да формаларды динамикалық түрде жасалуы.
+from django import forms
+from .models import Category, Product
+
+class ProductChoiceForm(forms.Form):
+    category = forms.ModelChoiceField(queryset=Category.obejects.all(), label='Категорияны таңдаңыз')
+
+    def __init__(self, *args, **kwargs):
+        selected_category = kwargs.pop('selected_category', None)
+        super(ProductChoiceForm, self).__init__(*args, **kwargs)
+
+        if selected_category:
+            self.fields['product'] = forms.ModelChoiceField(
+                queryset=Product.objects.filter(category=selected_category),
+                label="Өнімді таңдаңыз"
+            )
+
+24. Джанго жобасының құрылымы. Жоба мен қосымша құру, мысал 
+келтіріңіз. 
+Жоба құру: python manage.py startapp app
+
+25. Django-да API-лерді құру үшін қажетті кітапханаларды сипаттаңыз. 
+djangorestframework, django-cors-headers, drf-yasg, jwt, djangorestframework-simplejwt
+
+26. Django-да шаблонды мұрагерліктің (template inheritance) асырылу 
+жолы, тізбектеп мысалдар түрінде түсіндіріңіз. 
+{% extends %} қолданылады
+мысал
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}My Website{% endblock %}</title>
+</head>
+<body>
+    <header>
+        <h1>Басты бет</h1>
+        <nav>
+            <a href="/">Үйге</a> |
+            <a href="/about/">Біз туралы</a> |
+            <a href="/contact/">Байланыс</a>
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}
+        <!-- Әр беттің мазмұны осында келеді -->
+        {% endblock %}
+    </main>
+
+    <footer>
+        <p>© 2025 Менің сайтым</p>
+    </footer>
+</body>
+</html>
+
+30. Django жобасының базалық конфигурация файлында (settings.py) 
+«DATABASES», «INSTALLED_APPS», «MIDDLEWARE», «TEMPLATES»  
+параметрлерінің қажеттілктері, құрамдарындағы элементтерді сипаттап 
+түсіндіріңіз.  
+Middleware - HTTP сұраныс/жауап циклында әр түрлі өңдеулер жасау үшін (қауіпсіздік, сессия сақтау, куки өңдеу).
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',     # Қауіпсіздік
+    'django.contrib.sessions.middleware.SessionMiddleware', # Сессия
+    'django.middleware.common.CommonMiddleware',          # Ортақ баптаулар
+    'django.middleware.csrf.CsrfViewMiddleware',          # CSRF қорғау
+    'django.contrib.auth.middleware.AuthenticationMiddleware', # Аутентификация
+    'django.contrib.messages.middleware.MessageMiddleware',   # Хабарламалар
+    'django.middleware.clickjacking.XFrameOptionsMiddleware', # Клик-ұрлау қорғанысы
+]
+templates - Django-ға HTML шаблондарын қай жерден іздеу керек екенін және шаблон жүйесі қалай жұмыс істейтінін көрсету.
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',  # Django шаблон механизмі
+        'DIRS': [BASE_DIR / 'templates'],  # Жеке templates папка қосу
+        'APP_DIRS': True,                  # Әр қосымшадағы templates/ папкаларын сканерлеу
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]

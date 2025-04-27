@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+</head>
+<body>
+    <h1>Қош келдіңіз</h1>
+
+    {% if user.is_authenticated %}
+        <p>Сәлем, {{ user.email }}</p>
+        <p><a href="{% url 'logout' %}">Шығу</a></p>
+    {% else %}
+        <p>Сіз кірген жоқсыз</p>
+        <p><a href="{% url 'login' %}">Кіру</a> | <a href="{% url 'register' %}">Тіркелу</a></p>
+    {% endif %}
+</body>
+</html>
