@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Барлық кітаптар</title>
+</head>
+<body>
+    <h1>Барлық кітаптар</h1>
+
+    {% if books %}
+        <ul>
+            {% for book in books %}
+                <li>
+                    <strong>{{ book.name }}</strong><br>
+                    {{ book.description }}<br>
+                    Жарияланған: {{ book.created_at|date:"d.m.Y H:i" }}<br>
+                    Авторы: {{ book.user.email }}
+                </li>
+                <hr>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Кітаптар табылмады.</p>
+    {% endif %}
+
+    <p><a href="{% url 'home' %}">Басты бетке қайту</a></p>
+</body>
+</html>

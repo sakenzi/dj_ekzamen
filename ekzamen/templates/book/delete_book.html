@@ -1,0 +1,10 @@
+<h2>Кітапты жою</h2>
+
+<p>Сіз расымен осы кітапты жойғыңыз келе ме: <strong>{{ book.name }}</strong>?</p>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Иә, жою</button>
+</form>
+
+<p><a href="{% url 'books' %}">Бас тарту</a></p>

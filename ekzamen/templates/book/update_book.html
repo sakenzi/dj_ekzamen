@@ -1,0 +1,9 @@
+<h2>Кітапты жаңарту</h2>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Сақтау</button>
+</form>
+
+<p><a href="{% url 'books' %}">Кері қайту</a></p>
